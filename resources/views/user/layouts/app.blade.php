@@ -6,31 +6,31 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Hardware Shop') }} - @yield('title', 'Your Trusted Hardware Store')</title>
-
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
-    <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
-    @livewireStyles
     @stack('styles')
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+<body>
+    <div class="min-vh-100 bg-light">
         @include('user.layouts.navbar')
 
         <!-- Flash Messages -->
         @if (session()->has('success'))
-            <div x-data="{ show: true }"
-                 x-show="show"
-                 x-init="setTimeout(() => show = false, 3000)"
-                 class="fixed top-4 right-4 z-50 bg-green-500 text-white px-4 py-2 rounded shadow">
-                {{ session('success') }}
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div class="toast show bg-success text-white" role="alert">
+                    <div class="toast-body">
+                        {{ session('success') }}
+                    </div>
+                </div>
             </div>
         @endif
 
@@ -42,7 +42,8 @@
         @include('user.layouts.footer')
     </div>
 
-    @livewireScripts
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
 </html>

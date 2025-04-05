@@ -27,21 +27,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'status' => 'boolean'
+        'password' => 'hashed',
     ];
 
-    public function orders()
+    public function getProfilePhotoUrlAttribute()
     {
-        return $this->hasMany(Order::class);
-    }
-
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
+        return $this->photo ? asset('storage/' . $this->photo) : asset('images/default-avatar.png');
     }
 }

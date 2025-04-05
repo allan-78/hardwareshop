@@ -3,37 +3,46 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
-use App\Models\ProductImage;
+use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        Product::create([
-            'name' => 'Sample Product',
-            'description' => 'Sample product description',
-            'price' => 99.99,
-            'stock' => 10,
-            'brand_id' => 1,
-            'category_id' => 1,
-        ]);
+        $brand = Brand::first();
+        $category = Category::first();
 
-        // Or use factory if you have one
-        // Product::factory()->count(10)->create();
+        $products = [
+            [
+                'name' => 'Professional Power Drill',
+                'description' => 'Heavy-duty power drill for professional use',
+                'price' => 199.99,
+                'stock' => 50,
+                'brand_id' => $brand->id,
+                'category_id' => $category->id,
+                'primary_image_url' => 'products/default.jpg',
+                'is_featured' => true,
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Premium Hammer',
+                'description' => 'Professional grade hammer with ergonomic grip',
+                'price' => 29.99,
+                'stock' => 100,
+                'brand_id' => $brand->id,
+                'category_id' => $category->id,
+                'primary_image_url' => 'products/default.jpg',
+                'is_featured' => false,
+                'status' => 'active'
+            ]
+        ];
 
-        Product::factory()
-            ->count(50)
-            ->create()
-            ->each(function ($product) {
-                // Create 3 images for each product
-                for ($i = 1; $i <= 3; $i++) {
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image_path' => "products/default-{$i}.jpg",
-                        'is_primary' => $i === 1
-                    ]);
-                }
-            });
+        foreach ($products as $product) {
+            $product['slug'] = Str::slug($product['name']);
+            Product::create($product);
+        }
     }
 }

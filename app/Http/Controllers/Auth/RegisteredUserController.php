@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,24 +23,26 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'photo' => ['nullable', 'image', 'max:1024'],
+            'photo' => ['required', 'image', 'max:2048'], // Max 2MB
+            'terms' => ['required', 'accepted']
         ]);
+
+        // Handle photo upload
+        $photoPath = $request->file('photo')->store('profile-photos', 'public');
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'photo' => $photoPath,
+            'role' => 'customer',
+            'status' => 'active'
         ]);
-
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('users', 'public');
-            $user->update(['photo' => $path]);
-        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('verification.notice')->with('success', 'Please check your email for verification link.');
     }
 }

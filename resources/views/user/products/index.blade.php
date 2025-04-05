@@ -34,7 +34,7 @@
                                            value="{{ $category->id }}"
                                            id="category-{{ $category->id }}"
                                            {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}
-                                           class="h-4 w-4 text-blue-600 rounded border-gray-300">
+                                           class="h-4 w-4 text-blue-100 rounded border-gray-200">
                                     <label for="category-{{ $category->id }}" 
                                            class="ml-2 text-sm text-gray-700">
                                         {{ $category->name }}
@@ -71,6 +71,7 @@
                         <div>
                             <h4 class="font-medium text-gray-900">Brands</h4>
                             <div class="mt-4 space-y-2">
+                            
                                 @foreach($brands as $brand)
                                 <div class="flex items-center">
                                     <input type="checkbox" name="brands[]" 
@@ -127,10 +128,10 @@
                 <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
                     @forelse($products as $product)
                     <div class="group relative">
-                        <div class="w-full min-h-80 bg-gray-200 rounded-md overflow-hidden group-hover:opacity-75">
+                        <div class="w-full h-40 bg-gray-200 rounded-md overflow-hidden"> <!-- Reduced height to h-40 -->
                             <img src="{{ $product->primary_image_url }}"
                                  alt="{{ $product->name }}"
-                                 class="w-full h-full object-center object-cover">
+                                 class="w-full h-full object-contain p-4 max-h-40"> <!-- Added max-h-40 and object-contain -->
                         </div>
                         <div class="mt-4">
                             <h3 class="text-sm text-gray-700">

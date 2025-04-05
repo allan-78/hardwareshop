@@ -15,13 +15,17 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'brand_id',
         'category_id',
-        'brand_id'
+        'primary_image_url',
+        'is_featured',
+        'status'
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'stock' => 'integer'
+        'stock' => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     public function category()
@@ -37,22 +41,5 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(ProductImage::class);
-    }
-
-    public function reviews()
-    {
-        return $this->hasMany(Review::class);
-    }
-
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
-
-    public function getFirstImageUrlAttribute()
-    {
-        return $this->images()->where('is_primary', true)->first()?->image_path 
-            ?? $this->images()->first()?->image_path 
-            ?? 'default-product.jpg';
     }
 }

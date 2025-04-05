@@ -1,84 +1,81 @@
 @extends('user.layouts.app')
 
 @section('content')
-<div class="bg-white">
+<div>
     <!-- Hero Section -->
-    <div class="relative bg-gray-900">
-        <div class="absolute inset-0">
-            <img class="w-full h-full object-cover" src="{{ asset('images/hero.jpg') }}" alt="Hero Image">
-            <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+    <div class="position-relative bg-dark">
+        <div class="position-absolute w-100 h-100">
+            <img class="w-100 h-100 object-fit-cover" src="{{ asset('images/hero.jpg') }}" alt="Hero Image">
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-75"></div>
         </div>
         
-        <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Quality Hardware Tools
-            </h1>
-            <p class="mt-6 text-xl text-gray-300 max-w-3xl">
+        <div class="position-relative container py-5">
+            <h1 class="display-4 fw-bold text-white">Quality Hardware Tools</h1>
+            <p class="lead text-light mb-4">
                 Find everything you need for your projects - from power tools to building materials.
                 Professional grade tools at competitive prices.
             </p>
-            <div class="mt-10">
-                <a href="{{ route('products.index') }}" 
-                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                    Shop Now
-                </a>
-            </div>
+            <a href="{{ route('products.index') }}" 
+               class="btn btn-primary btn-lg">
+                Shop Now
+            </a>
         </div>
     </div>
 
     <!-- Categories Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Shop by Category</h2>
-        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="container py-5">
+        <h2 class="fw-bold mb-4">Shop by Category</h2>
+        <div class="row g-4">
             @foreach($categories as $category)
-            <a href="{{ route('products.index', ['category' => $category->id]) }}" 
-               class="group">
-                <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden">
-                    <img src="{{ $category->image_url }}" 
-                         alt="{{ $category->name }}"
-                         class="w-full h-full object-center object-cover group-hover:opacity-75">
-                </div>
-                <h3 class="mt-4 text-sm text-gray-700">{{ $category->name }}</h3>
-                <p class="mt-1 text-lg font-medium text-gray-900">
-                    {{ $category->products_count }} Products
-                </p>
-            </a>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <a href="{{ route('products.index', ['category' => $category->id]) }}" 
+                   class="text-decoration-none">
+                    <div class="card h-100">
+                        <div class="category-image-container">
+                            <img src="{{ $category->image_url }}" 
+                                 alt="{{ $category->name }}"
+                                 class="card-img-top">
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title h6">{{ $category->name }}</h3>
+                            <p class="card-text">{{ $category->products_count }} Products</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
             @endforeach
         </div>
     </div>
 
     <!-- Featured Products -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Featured Products</h2>
-        <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="container py-5">
+        <h2 class="fw-bold mb-4">Featured Products</h2>
+        <div class="row g-4">
             @foreach($featuredProducts as $product)
-            <div class="group relative">
-                <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
-                    <img src="{{ $product->primary_image_url }}"
-                         alt="{{ $product->name }}"
-                         class="w-full h-full object-center object-cover">
-                </div>
-                <div class="mt-4 flex justify-between">
-                    <div>
-                        <h3 class="text-sm text-gray-700">
-                            <a href="{{ route('products.show', $product) }}">
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card h-100">
+                    <div class="product-image-container">
+                        <img src="{{ $product->primary_image_url }}"
+                             alt="{{ $product->name }}"
+                             class="card-img-top">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title h6">
+                            <a href="{{ route('products.show', $product) }}" class="text-decoration-none">
                                 {{ $product->name }}
                             </a>
                         </h3>
-                        <p class="mt-1 text-sm text-gray-500">{{ $product->brand->name }}</p>
+                        <p class="card-text text-muted">{{ $product->brand->name }}</p>
+                        <p class="card-text fw-bold">₱{{ number_format($product->price, 2) }}</p>
+                        <form action="{{ route('cart.add') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary w-100">
+                                Add to Cart
+                            </button>
+                        </form>
                     </div>
-                    <p class="text-sm font-medium text-gray-900">₱{{ number_format($product->price, 2) }}</p>
-                </div>
-                <div class="mt-4">
-                    <form action="{{ route('cart.add') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" 
-                                class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                            Add to Cart
-                        </button>
-                    </form>
                 </div>
             </div>
             @endforeach
@@ -86,67 +83,64 @@
     </div>
 
     <!-- Search Section with Filters -->
-    <div class="bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="text-center text-2xl font-extrabold text-gray-900 mb-8">
-                    Find What You Need
-                </h2>
-                <form action="{{ route('products.index') }}" method="GET" class="space-y-4">
-                    <div class="flex gap-4">
-                        <div class="flex-1">
-                            <input type="text" name="search" placeholder="Search products..." 
-                                   value="{{ request('search') }}"
-                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <button type="submit" 
-                                class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
-                            Search
-                        </button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <select name="category" class="w-full rounded-md border-gray-300">
-                                <option value="">All Categories</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" 
-                                            {{ request('category') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
+    <div class="bg-light py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="text-center fw-bold mb-4">Find What You Need</h2>
+                    <form action="{{ route('products.index') }}" method="GET">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <input type="text" name="search" 
+                                           class="form-control" 
+                                           placeholder="Search products..."
+                                           value="{{ request('search') }}">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="category" class="form-select">
+                                    <option value="">All Categories</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" 
+                                                {{ request('category') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="brand" class="form-select">
+                                    <option value="">All Brands</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}"
+                                                {{ request('brand') == $brand->id ? 'selected' : '' }}>
+                                            {{ $brand->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="price" class="form-select">
+                                    <option value="">Price Range</option>
+                                    <option value="0-1000" {{ request('price') == '0-1000' ? 'selected' : '' }}>
+                                        Under ₱1,000
                                     </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <select name="brand" class="w-full rounded-md border-gray-300">
-                                <option value="">All Brands</option>
-                                @foreach($brands as $brand)
-                                    <option value="{{ $brand->id }}"
-                                            {{ request('brand') == $brand->id ? 'selected' : '' }}>
-                                        {{ $brand->name }}
+                                    <option value="1000-5000" {{ request('price') == '1000-5000' ? 'selected' : '' }}>
+                                        ₱1,000 - ₱5,000
                                     </option>
-                                @endforeach
-                            </select>
+                                    <option value="5000-10000" {{ request('price') == '5000-10000' ? 'selected' : '' }}>
+                                        ₱5,000 - ₱10,000
+                                    </option>
+                                    <option value="10000+" {{ request('price') == '10000+' ? 'selected' : '' }}>
+                                        Over ₱10,000
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <select name="price" class="w-full rounded-md border-gray-300">
-                                <option value="">Price Range</option>
-                                <option value="0-1000" {{ request('price') == '0-1000' ? 'selected' : '' }}>
-                                    Under ₱1,000
-                                </option>
-                                <option value="1000-5000" {{ request('price') == '1000-5000' ? 'selected' : '' }}>
-                                    ₱1,000 - ₱5,000
-                                </option>
-                                <option value="5000-10000" {{ request('price') == '5000-10000' ? 'selected' : '' }}>
-                                    ₱5,000 - ₱10,000
-                                </option>
-                                <option value="10000+" {{ request('price') == '10000+' ? 'selected' : '' }}>
-                                    Over ₱10,000
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -155,9 +149,8 @@
 
 @push('scripts')
 <script>
-    // Price range slider functionality
-    const priceRange = document.querySelector('select[name="price"]');
-    priceRange.addEventListener('change', function() {
+    // Auto-submit form when price range changes
+    document.querySelector('select[name="price"]').addEventListener('change', function() {
         this.form.submit();
     });
 </script>

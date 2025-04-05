@@ -4,21 +4,27 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $categories = [
-            ['name' => 'Power Tools', 'description' => 'Electric and battery-powered tools'],
-            ['name' => 'Hand Tools', 'description' => 'Manual tools for various tasks'],
-            ['name' => 'Plumbing', 'description' => 'Pipes, fittings, and plumbing tools'],
-            ['name' => 'Electrical', 'description' => 'Wiring, fixtures, and electrical supplies'],
-            ['name' => 'Safety Equipment', 'description' => 'Personal protective equipment'],
+            'Power Tools',
+            'Hand Tools',
+            'Plumbing',
+            'Electrical',
+            'Building Materials'
         ];
 
-        foreach ($categories as $category) {
-            Category::create($category);
+        foreach ($categories as $categoryName) {
+            Category::create([
+                'name' => $categoryName,
+                'slug' => Str::slug($categoryName),
+                'description' => "Collection of {$categoryName}",
+                'is_active' => true
+            ]);
         }
     }
 }

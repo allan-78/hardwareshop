@@ -4,21 +4,26 @@ namespace Database\Seeders;
 
 use App\Models\Brand;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class BrandSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $brands = [
-            ['name' => 'Stanley', 'description' => 'Quality hand tools and storage solutions'],
-            ['name' => 'DeWalt', 'description' => 'Professional power tools and equipment'],
-            ['name' => 'Makita', 'description' => 'Premium power tools and accessories'],
-            ['name' => 'Bosch', 'description' => 'Innovative tools and hardware solutions'],
-            ['name' => 'Milwaukee', 'description' => 'Heavy-duty construction tools'],
+            'DeWalt',
+            'Makita',
+            'Bosch',
+            'Stanley',
+            'Milwaukee'
         ];
 
-        foreach ($brands as $brand) {
-            Brand::create($brand);
+        foreach ($brands as $brandName) {
+            Brand::create([
+                'name' => $brandName,
+                'slug' => Str::slug($brandName),
+                'is_active' => true
+            ]);
         }
     }
 }
