@@ -1,0 +1,307 @@
+ITCP226 Computer Programming 5 - Web Development
+
+MP1 Product/Service  20pts
+
+Product/Service CRUD datatable 8pts
+Product/Service CRUDRestore datatable upload a single photo 10pts
+Product/Service CRUDRestore datatable upload/view  multiple photos 15pts
+Product/Service CRUDRestore datatable upload/view  multiple photos, import products on excel worksheet. 20pts
+
+mp2 User CRUD 20pts
+   User Registration with upload photo 5pts
+   User update profile and upload photo. 5pts
+   list users on a datatable. 5pts
+   admin can set the status of a user to active/inactive. update role of user. 5pts
+
+mp3 20pts
+   authentication. send an email verification after registration. only verified users can login. admin routes should be protected from unauthenticated and unauthorized (not admin role) users. 20pts
+
+mp4 Product review CRUD 20pts
+   customers that bought a product or service can post a review/comment and rating on that service or product. 8pts
+   customers that bought a product or service can post and update a review/comment and rating on that service or product. 10pts
+   list all reviews on a datatable. 5pts
+   the administrator can delete user reviews. 5pts
+
+term test 30pts
+   transaction. an email will be sent after a transaction has been completed. 10pts
+ 
+   administrator can update the status of the transaction. 5pts
+   send an email after the update 5pts
+
+   attach on the email the receipt in pdf format. the receipt contains the customer and order details. 10pts
+
+quiz 1 validation 15pts
+   form validation add/edit product/service. user registration validation 15pts 
+
+quiz 2 filter 15pts 
+   product/services filter by price 10pts
+   product/services filter by price and category/brand/type 15pts
+
+quiz 3 charts 15pts
+   charts yearly sales, monthly sales, 8pts
+   sales bar chart with date range (date picker), A pie chart showing the percentage of total sales contributed by each product. 15pts
+
+quiz 4 search 15pts
+   search products on home page(no datatable search). use LIKE query 8pts
+   search products on home page(no datatable search). use model search 10pts
+   search products on home page(no datatable search). use laravel scout with results pagination 15pts
+
+q5 user interface design 15pts
+
+u1 database design/migration 20pts 
+   design should be at least 2nd normal form. 10pts
+   create the database using migration scripts 5pts
+   database seeding. seed all database tables 5pts
+
+u2 functional requirements completeness app complexity, added features. 10pts 
+   program execution (errors), 10pts
+   project contribution 10pts
+
+Term Test Lec. written 
+
+hardware-shop/
+├── app/
+│   ├── Console/
+│   │   └── Kernel.php
+│   ├── Exceptions/
+│   │   └── Handler.php
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/
+│   │   │   │   ├── AdminController.php
+│   │   │   │   ├── BrandController.php
+│   │   │   │   ├── CategoryController.php
+│   │   │   │   ├── DashboardController.php
+│   │   │   │   ├── OrderController.php
+│   │   │   │   ├── ProductController.php
+│   │   │   │   ├── ReviewController.php
+│   │   │   │   └── UserController.php
+│   │   │   ├── Auth/
+│   │   │   │   ├── ForgotPasswordController.php
+│   │   │   │   ├── LoginController.php
+│   │   │   │   ├── RegisterController.php
+│   │   │   │   ├── ResetPasswordController.php
+│   │   │   │   └── VerificationController.php
+│   │   │   ├── User/
+│   │   │   │   ├── CartController.php
+│   │   │   │   ├── CheckoutController.php
+│   │   │   │   ├── HomeController.php
+│   │   │   │   ├── OrderController.php
+│   │   │   │   ├── ProductController.php
+│   │   │   │   ├── ProfileController.php
+│   │   │   │   └── ReviewController.php
+│   │   │   └── Controller.php
+│   │   ├── Middleware/
+│   │   │   ├── AdminMiddleware.php
+│   │   │   ├── Authenticate.php
+│   │   │   ├── CheckForMaintenanceMode.php
+│   │   │   ├── EncryptCookies.php
+│   │   │   ├── RedirectIfAuthenticated.php
+│   │   │   ├── TrimStrings.php
+│   │   │   ├── TrustHosts.php
+│   │   │   ├── TrustProxies.php
+│   │   │   └── VerifyCsrfToken.php
+│   │   ├── Requests/
+│   │   │   ├── ProductRequest.php
+│   │   │   ├── ReviewRequest.php
+│   │   │   └── UserRequest.php
+│   │   └── Kernel.php
+│   ├── Imports/
+│   │   └── ProductsImport.php
+│   ├── Mail/
+│   │   ├── OrderConfirmation.php
+│   │   ├── OrderStatusUpdated.php
+│   │   └── VerifyEmail.php
+│   ├── Models/
+│   │   ├── Brand.php
+│   │   ├── Category.php
+│   │   ├── Order.php
+│   │   ├── OrderItem.php
+│   │   ├── Product.php
+│   │   ├── ProductImage.php
+│   │   ├── Review.php
+│   │   └── User.php
+│   └── Providers/
+│       ├── AppServiceProvider.php
+│       ├── AuthServiceProvider.php
+│       ├── BroadcastServiceProvider.php
+│       ├── EventServiceProvider.php
+│       └── RouteServiceProvider.php
+├── bootstrap/
+│   ├── app.php
+│   └── cache/
+├── config/
+│   ├── app.php
+│   ├── auth.php
+│   ├── broadcasting.php
+│   ├── cache.php
+│   ├── database.php
+│   ├── filesystems.php
+│   ├── mail.php
+│   ├── queue.php
+│   ├── scout.php
+│   ├── services.php
+│   ├── session.php
+│   └── view.php
+├── database/
+│   ├── factories/
+│   │   ├── BrandFactory.php
+│   │   ├── CategoryFactory.php
+│   │   ├── ProductFactory.php
+│   │   └── UserFactory.php
+│   ├── migrations/
+│   │   ├── 2014_10_12_000000_create_users_table.php
+│   │   ├── 2014_10_12_100000_create_password_resets_table.php
+│   │   ├── 2019_08_19_000000_create_failed_jobs_table.php
+│   │   ├── 2023_01_01_000001_create_categories_table.php
+│   │   ├── 2023_01_01_000002_create_brands_table.php
+│   │   ├── 2023_01_01_000003_create_products_table.php
+│   │   ├── 2023_01_01_000004_create_product_images_table.php
+│   │   ├── 2023_01_01_000005_create_reviews_table.php
+│   │   ├── 2023_01_01_000006_create_orders_table.php
+│   │   └── 2023_01_01_000007_create_order_items_table.php
+│   └── seeders/
+│       ├── BrandSeeder.php
+│       ├── CategorySeeder.php
+│       ├── DatabaseSeeder.php
+│       ├── ProductSeeder.php
+│       └── UserSeeder.php
+├── public/
+│   ├── css/
+│   │   ├── admin.css
+│   │   ├── app.css
+│   │   └── user.css
+│   ├── images/
+│   │   ├── logo.png
+│   │   └── default-user.png
+│   ├── js/
+│   │   ├── admin.js
+│   │   ├── app.js
+│   │   ├── cart.js
+│   │   ├── charts.js
+│   │   └── user.js
+│   ├── storage/
+│   │   ├── products/
+│   │   └── users/
+│   ├── .htaccess
+│   ├── favicon.ico
+│   ├── index.php
+│   └── robots.txt
+├── resources/
+│   ├── css/
+│   │   └── app.css
+│   ├── js/
+│   │   └── app.js
+│   ├── lang/
+│   │   └── en/
+│   │       ├── auth.php
+│   │       ├── pagination.php
+│   │       ├── passwords.php
+│   │       └── validation.php
+│   └── views/
+│       ├── admin/
+│       │   ├── brands/
+│       │   │   ├── create.blade.php
+│       │   │   ├── edit.blade.php
+│       │   │   └── index.blade.php
+│       │   ├── categories/
+│       │   │   ├── create.blade.php
+│       │   │   ├── edit.blade.php
+│       │   │   └── index.blade.php
+│       │   ├── dashboard/
+│       │   │   └── index.blade.php
+│       │   ├── layouts/
+│       │   │   ├── app.blade.php
+│       │   │   ├── navbar.blade.php
+│       │   │   └── sidebar.blade.php
+│       │   ├── orders/
+│       │   │   ├── index.blade.php
+│       │   │   └── show.blade.php
+│       │   ├── products/
+│       │   │   ├── create.blade.php
+│       │   │   ├── edit.blade.php
+│       │   │   ├── import.blade.php
+│       │   │   └── index.blade.php
+│       │   ├── reviews/
+│       │   │   └── index.blade.php
+│       │   └── users/
+│       │       ├── create.blade.php
+│       │       ├── edit.blade.php
+│       │       └── index.blade.php
+│       ├── auth/
+│       │   ├── login.blade.php
+│       │   ├── passwords/
+│       │   │   ├── confirm.blade.php
+│       │   │   ├── email.blade.php
+│       │   │   └── reset.blade.php
+│       │   ├── register.blade.php
+│       │   └── verify.blade.php
+│       ├── emails/
+│       │   ├── order-confirmation.blade.php
+│       │   └── order-status-updated.blade.php
+│       ├── errors/
+│       │   ├── 403.blade.php
+│       │   ├── 404.blade.php
+│       │   └── 500.blade.php
+│       ├── layouts/
+│       │   ├── app.blade.php
+│       │   └── guest.blade.php
+│       ├── pdf/
+│       │   └── receipt.blade.php
+│       └── user/
+│           ├── cart/
+│           │   └── index.blade.php
+│           ├── checkout/
+│           │   ├── index.blade.php
+│           │   └── success.blade.php
+│           ├── home/
+│           │   └── index.blade.php
+│           ├── layouts/
+│           │   ├── app.blade.php
+│           │   ├── footer.blade.php
+│           │   └── navbar.blade.php
+│           ├── orders/
+│           │   ├── index.blade.php
+│           │   └── show.blade.php
+│           ├── products/
+│           │   ├── index.blade.php
+│           │   └── show.blade.php
+│           ├── profile/
+│           │   └── edit.blade.php
+│           └── reviews/
+│               └── create.blade.php
+├── routes/
+│   ├── admin.php
+│   ├── api.php
+│   ├── channels.php
+│   ├── console.php
+│   └── web.php
+├── storage/
+│   ├── app/
+│   │   ├── public/
+│   │   │   ├── products/
+│   │   │   └── users/
+│   │   └── imports/
+│   ├── framework/
+│   │   ├── cache/
+│   │   ├── sessions/
+│   │   └── views/
+│   └── logs/
+├── tests/
+│   ├── Feature/
+│   │   ├── AdminTest.php
+│   │   ├── AuthTest.php
+│   │   └── UserTest.php
+│   └── Unit/
+│       ├── ProductTest.php
+│       └── OrderTest.php
+├── .env
+├── .env.example
+├── .gitattributes
+├── .gitignore
+├── artisan
+├── composer.json
+├── package.json
+├── phpunit.xml
+├── server.php
+└── webpack.mix.js
