@@ -1,0 +1,26 @@
+@import 'admin/variables';
+@import 'admin/layout';
+@import 'admin/sidebar';
+@import 'admin/components';
+
+// Global Styles
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: $gray-800;
+    line-height: 1.5;
+}
+
+// Utilities
+.shadow-sm { box-shadow: $shadow-sm !important; }
+.shadow-md { box-shadow: $shadow-md !important; }
+.shadow-lg { box-shadow: $shadow-lg !important; }
+
+// Animations
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}

@@ -1,0 +1,76 @@
+// Cards
+.card {
+    background: white;
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: $shadow-sm;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: $shadow-md;
+    }
+
+    .card-header {
+        background: transparent;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1.25rem;
+
+        h6 {
+            margin: 0;
+            font-weight: 600;
+            color: $gray-800;
+        }
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+}
+
+// Forms
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 4px rgba($primary, 0.1);
+    }
+}
+
+// Tables
+.table {
+    th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        padding: 1rem;
+        background: $gray-100;
+    }
+
+    td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+}
+
+// Buttons
+.btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &-primary {
+        background: $primary;
+        border: none;
+
+        &:hover {
+            background: darken($primary, 5%);
+            transform: translateY(-1px);
+        }
+    }
+}

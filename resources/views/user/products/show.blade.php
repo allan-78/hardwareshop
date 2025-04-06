@@ -89,12 +89,10 @@
                     </div>
                 </div>
 
-                <!-- Add to Cart -->
+                <!-- Add to Cart Form -->
                 <div class="mt-8">
-                    <form action="{{ route('cart.add') }}" method="POST">
+                    <form action="{{ route('cart.add', $product) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        
                         <div class="flex items-center">
                             <label for="quantity" class="sr-only">Quantity</label>
                             <select name="quantity" id="quantity" 

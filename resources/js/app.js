@@ -1,62 +1,57 @@
 import './bootstrap';
 import 'bootstrap';
+import Alpine from 'alpinejs';
+import { createApp } from 'vue';
+import ProductList from './components/ProductList.vue';
+import ShoppingCart from './components/ShoppingCart.vue';
 
 window.Alpine = Alpine;
 Alpine.start();
 
-// Vue Components
-import ProductList from './components/ProductList.vue';
-import ShoppingCart from './components/ShoppingCart.vue';
+// Initialize Bootstrap components
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dropdowns
+    const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle, [data-bs-toggle="dropdown"]'));
+    dropdownElementList.forEach(function(dropdownToggleEl) {
+        new bootstrap.Dropdown(dropdownToggleEl, {
+            offset: [0, 2],
+            boundary: 'viewport'
+        });
+    });
 
-const app = createApp({
-    data() {
-        return {
-            cartItems: []
-        }
-    },
-    methods: {
-        addToCart(product) {
-            const existingItem = this.cartItems.find(item => item.id === product.id);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                this.cartItems.push({
-                    ...product,
-                    quantity: 1
-                });
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Vue Application
+    const app = createApp({
+        data() {
+            return {
+                cartItems: []
             }
         },
-        handleCheckout(items) {
-            // Implement checkout logic here
-            console.log('Checking out:', items);
+        methods: {
+            addToCart(product) {
+                const existingItem = this.cartItems.find(item => item.id === product.id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    this.cartItems.push({
+                        ...product,
+                        quantity: 1
+                    });
+                }
+            },
+            handleCheckout(items) {
+                // Implement checkout logic here
+                console.log('Checking out:', items);
+            }
         }
-    }
-});
-
-app.component('product-list', ProductList);
-app.component('shopping-cart', ShoppingCart);
-app.mount('#app');
-
-// Custom JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
-    // Initialize popovers
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl)
-    });
-
-    // Auto-hide alerts
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.style.opacity = '0';
-            setTimeout(() => alert.remove(), 300);
-        }, 3000);
-    });
+    app.component('product-list', ProductList);
+    app.component('shopping-cart', ShoppingCart);
+    app.mount('#app');
 });

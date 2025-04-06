@@ -1,45 +1,77 @@
 @extends('user.layouts.app')
 
 @section('content')
-<div class="bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Breadcrumbs -->
-        <nav class="flex mb-8" aria-label="Breadcrumb">
-            <ol class="flex items-center space-x-2">
-                <li>
-                    <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-700">Home</a>
-                </li>
-                <li>
-                    <span class="text-gray-300">/</span>
-                </li>
-                <li>
-                    <span class="text-gray-900">Categories</span>
-                </li>
-            </ol>
-        </nav>
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item active">Categories</li>
+        </ol>
+    </nav>
 
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach($categories as $category)
-            <div class="bg-white shadow rounded-lg overflow-hidden">
-                <a href="{{ route('categories.show', $category->slug) }}" class="block">
-                    @if($category->image_url)
-                        <img src="{{ $category->image_url }}" 
-                             alt="{{ $category->name }}" 
-                             class="w-full h-48 object-cover">
-                    @endif
-                    <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900">{{ $category->name }}</h3>
-                        <p class="mt-2 text-sm text-gray-500">
-                            {{ $category->description }}
-                        </p>
-                        <p class="mt-2 text-sm text-gray-600">
-                            {{ $category->products_count }} Products
-                        </p>
+    <h2 class="mb-4 fw-bold">Browse Categories</h2>
+
+    <div class="row g-4">
+        @foreach($categories as $category)
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm category-card">
+                @if($category->image_url)
+                <div class="category-image-wrapper">
+                    <img src="{{ $category->image_url }}" 
+                         alt="{{ $category->name }}" 
+                         class="card-img-top category-image">
+                </div>
+                @endif
+                <div class="card-body">
+                    <h3 class="card-title h5 fw-bold mb-3">{{ $category->name }}</h3>
+                    <p class="card-text text-muted mb-3">{{ $category->description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">{{ $category->products_count }} Products</span>
+                        <a href="{{ route('products.index', ['category' => $category->id]) }}" 
+                           class="btn btn-outline-primary btn-sm">Browse Products</a>
                     </div>
-                </a>
+                </div>
             </div>
-            @endforeach
         </div>
+        @endforeach
     </div>
 </div>
+
+@push('styles')
+<style>
+.category-card {
+    transition: transform 0.2s ease-in-out;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.category-image-wrapper {
+    height: 200px;
+    overflow: hidden;
+}
+
+.category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-image {
+    transform: scale(1.05);
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5em 1em;
+}
+</style>
+@endpush
 @endsection

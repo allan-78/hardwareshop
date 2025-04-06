@@ -67,9 +67,8 @@
                         </h3>
                         <p class="card-text text-muted">{{ $product->brand->name }}</p>
                         <p class="card-text fw-bold">₱{{ number_format($product->price, 2) }}</p>
-                        <form action="{{ route('cart.add') }}" method="POST">
+                        <form action="{{ route('cart.add', $product) }}" method="POST">
                             @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="btn btn-primary w-100">
                                 Add to Cart

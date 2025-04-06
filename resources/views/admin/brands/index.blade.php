@@ -1,6 +1,10 @@
 @extends('admin.layouts.app')
 
 @section('content')
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 <div class="container mx-auto px-6 py-8">
     <div class="flex justify-between items-center">
         <h3 class="text-gray-700 text-3xl font-medium">Brands</h3>

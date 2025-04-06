@@ -9,13 +9,13 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ReviewController;
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Products Management
     Route::get('/products/import', [ProductController::class, 'import'])->name('products.import');
-    Route::post('/products/import', [ProductController::class, 'processImport'])->name('products.processImport');
+    Route::post('/products/import', [ProductController::class, 'processImport'])->name('products.import.process');
     Route::delete('/products/{product}/force', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
     Route::post('/products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::resource('products', ProductController::class);

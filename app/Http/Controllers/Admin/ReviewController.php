@@ -27,7 +27,12 @@ class ReviewController extends AdminController
                 ->make(true);
         }
 
-        return view('admin.reviews.index');
+        // Add this line to fetch reviews for non-AJAX requests
+        $reviews = Review::with(['user', 'product'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+            
+        return view('admin.reviews.index', compact('reviews'));
     }
 
     public function destroy(Review $review)

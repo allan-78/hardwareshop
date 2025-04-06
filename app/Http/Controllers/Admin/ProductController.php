@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Models\Brand;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Category;
-use App\Models\Brand;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,32 +12,28 @@ use App\Imports\ProductsImport;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if (request()->ajax()) {
-            $products = Product::with(['category', 'brand', 'images'])
-                ->withTrashed();
-
+        if ($request->ajax()) {
+            $products = Product::with(['category', 'brand']);
+            
             return DataTables::of($products)
                 ->addColumn('action', function ($product) {
-                    $buttons = '<div class="btn-group">';
-                    if ($product->trashed()) {
-                        $buttons .= '<button data-id="'.$product->id.'" class="btn btn-sm btn-success restore-btn">Restore</button>';
-                    } else {
-                        $buttons .= '<a href="'.route('admin.products.edit', $product).'" class="btn btn-sm btn-primary">Edit</a>';
-                        $buttons .= '<button data-id="'.$product->id.'" class="btn btn-sm btn-danger delete-btn">Delete</button>';
-                    }
-                    $buttons .= '</div>';
-                    return $buttons;
+                    return view('admin.products.actions', compact('product'));
                 })
-                ->addColumn('image', function ($product) {
-                    return '<img src="'.asset('storage/' . $product->first_image_url).'" height="50">';
+                ->editColumn('created_at', function ($product) {
+                    return $product->created_at->format('M d, Y');
                 })
-                ->rawColumns(['action', 'image'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
-        return view('admin.products.index');
+        // Get brands for the dropdown
+        $brands = Brand::all();
+        $categories = Category::all();
+        $products = Product::with(['category', 'brand'])->paginate(10);
+
+        return view('admin.products.index', compact('products', 'brands', 'categories'));
     }
 
     public function create()

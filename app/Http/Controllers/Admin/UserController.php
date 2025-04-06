@@ -28,7 +28,9 @@ class UserController extends AdminController
                 ->make(true);
         }
 
-        return view('admin.users.index');
+        // Add this line to fetch users for non-AJAX requests
+        $users = User::orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.users.index', compact('users'));
     }
 
     public function updateStatus(Request $request, User $user)

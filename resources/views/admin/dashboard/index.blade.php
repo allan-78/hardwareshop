@@ -1,128 +1,65 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="container-fluid py-4">
-    <h1 class="h3 mb-4">Dashboard</h1>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    </div>
 
     <div class="row">
-        <!-- Sales Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card bg-primary text-white h-100">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-2">Total Sales</h6>
-                            <h2 class="card-title mb-0">₱{{ number_format($totalSales, 2) }}</h2>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Orders</div>
+                            <div class="h5 mb-0 font-weight-bold">{{ $totalOrders }}</div>
                         </div>
-                        <i class="bi bi-currency-dollar fs-1"></i>
+                        <div class="col-auto">
+                            <i class="bi bi-cart3 fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Orders Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card bg-success text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-2">Total Orders</h6>
-                            <h2 class="card-title mb-0">{{ $totalOrders }}</h2>
-                        </div>
-                        <i class="bi bi-cart fs-1"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Products Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card bg-info text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-2">Total Products</h6>
-                            <h2 class="card-title mb-0">{{ $totalProducts }}</h2>
-                        </div>
-                        <i class="bi bi-box fs-1"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Users Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card bg-warning text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="card-subtitle mb-2">Total Users</h6>
-                            <h2 class="card-title mb-0">{{ $totalUsers }}</h2>
-                        </div>
-                        <i class="bi bi-people fs-1"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Add more stat cards here -->
     </div>
 
-    <!-- Charts -->
-    <div class="row mt-4">
-        <div class="col-lg-6 mb-4">
-            <div class="card">
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Sales Overview</h6>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Sales Overview</h5>
-                    <canvas id="salesChart"></canvas>
+                    <div class="chart-area">
+                        <canvas id="salesChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Top Categories</h5>
-                    <canvas id="categoriesChart"></canvas>
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Orders</h6>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Orders -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Recent Orders</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
                         @foreach($recentOrders as $order)
-                        <tr>
-                            <td>#{{ $order->id }}</td>
-                            <td>{{ $order->user->name }}</td>
-                            <td>₱{{ number_format($order->total_amount, 2) }}</td>
-                            <td>
-                                <span class="badge bg-{{ 
-                                    $order->status === 'completed' ? 'success' : 
-                                    ($order->status === 'pending' ? 'warning' : 'danger') 
-                                }}">
-                                    {{ ucfirst($order->status) }}
-                                </span>
-                            </td>
-                            <td>{{ $order->created_at->format('M d, Y') }}</td>
-                        </tr>
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Order #{{ $order->id }}</h6>
+                                    <small class="text-muted">{{ $order->created_at->diffForHumans() }}</small>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">{{ $order->total_amount }}</span>
+                            </div>
+                        </div>
                         @endforeach
-                    </tbody>
-                </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -131,27 +68,5 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const salesData = @json($salesChart);
-    const categoryData = @json($categoryChart);
-
-    // Initialize Charts
-    new Chart(document.getElementById('salesChart'), {
-        type: 'line',
-        data: salesData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-
-    new Chart(document.getElementById('categoriesChart'), {
-        type: 'doughnut',
-        data: categoryData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-</script>
+<script src="{{ asset('js/admin-charts.js') }}"></script>
 @endpush

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import path from 'path';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
@@ -11,10 +11,17 @@ export default defineConfig({
             ],
             refresh: true,
         }),
+        vue(),
     ],
-    resolve: {
-        alias: {
-            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `
+                    @import "bootstrap/scss/functions";
+                    @import "bootstrap/scss/variables";
+                    @import "bootstrap/scss/mixins";
+                `
+            }
         }
-    },
+    }
 });

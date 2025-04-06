@@ -14,11 +14,14 @@ class OrderController extends AdminController
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $orders = Order::with(['user', 'items.product']);
+            $orders = Order::with('user');
             
             return DataTables::of($orders)
                 ->addColumn('action', function ($order) {
                     return view('admin.orders.actions', compact('order'));
+                })
+                ->editColumn('status', function ($order) {
+                    return ucfirst($order->status);
                 })
                 ->editColumn('total_amount', function ($order) {
                     return '₱' . number_format($order->total_amount, 2);
@@ -26,37 +29,15 @@ class OrderController extends AdminController
                 ->editColumn('created_at', function ($order) {
                     return $order->created_at->format('M d, Y H:i');
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
 
-        return view('admin.orders.index');
-    }
+        // Get orders with pagination for non-AJAX requests
+        $orders = Order::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-    public function show(Order $order)
-    {
-        $order->load(['user', 'items.product']);
-        return view('admin.orders.show', compact('order'));
-    }
-
-    public function updateStatus(Request $request, Order $order)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
-        ]);
-
-        $order->update(['status' => $request->status]);
-        
-        // Send email notification
-        Mail::to($order->user->email)->send(new OrderStatusUpdated($order));
-
-        return redirect()->back()->with('success', 'Order status updated successfully');
-    }
-
-    public function generatePDF(Order $order)
-    {
-        $order->load(['user', 'items.product']);
-        $pdf = PDF::loadView('pdf.receipt', compact('order'));
-        return $pdf->download('order-'.$order->id.'.pdf');
+        return view('admin.orders.index', compact('orders'));
     }
 }

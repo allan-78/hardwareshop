@@ -1,41 +1,87 @@
-<aside class="w-64 bg-gray-800 min-h-screen">
-    <div class="flex items-center justify-center h-16 bg-gray-900">
-        <span class="text-white text-lg font-semibold">{{ config('app.name') }}</span>
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <a href="{{ route('admin.dashboard') }}" class="brand-logo">
+            <i class="bi bi-shop"></i>
+            <span>Hardware Shop</span>
+        </a>
     </div>
-    <nav class="mt-5">
-        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-            <x-icon name="dashboard" class="mr-3 h-6 w-6"/>
-            Dashboard
-        </x-nav-link>
 
-        <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-            <x-icon name="shopping-bag" class="mr-3 h-6 w-6"/>
-            Products
-        </x-nav-link>
+    <div class="nav-category">Main</div>
 
-        <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
-            <x-icon name="shopping-cart" class="mr-3 h-6 w-6"/>
-            Orders
-        </x-nav-link>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
 
-        <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-            <x-icon name="collection" class="mr-3 h-6 w-6"/>
-            Categories
-        </x-nav-link>
+        <li class="nav-item">
+            <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                <i class="bi bi-box-seam"></i>
+                <span>Products</span>
+            </a>
+        </li>
 
-        <x-nav-link :href="route('admin.brands.index')" :active="request()->routeIs('admin.brands.*')">
-            <x-icon name="tag" class="mr-3 h-6 w-6"/>
-            Brands
-        </x-nav-link>
+        <li class="nav-item">
+            <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                <i class="bi bi-cart3"></i>
+                <span>Orders</span>
+            </a>
+        </li>
+    </ul>
 
-        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-            <x-icon name="users" class="mr-3 h-6 w-6"/>
-            Users
-        </x-nav-link>
+    <div class="nav-divider"></div>
+    <div class="nav-category">Catalog</div>
 
-        <x-nav-link :href="route('admin.reviews.index')" :active="request()->routeIs('admin.reviews.*')">
-            <x-icon name="star" class="mr-3 h-6 w-6"/>
-            Reviews
-        </x-nav-link>
-    </nav>
-</aside>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <i class="bi bi-grid"></i>
+                <span>Categories</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('admin.brands.index') }}" class="nav-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                <i class="bi bi-tag"></i>
+                <span>Brands</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="nav-divider"></div>
+    <div class="nav-category">Users</div>
+
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <i class="bi bi-people"></i>
+                <span>Users</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('admin.reviews.index') }}" class="nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                <i class="bi bi-star"></i>
+                <span>Reviews</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="nav-divider"></div>
+
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="{{ route('logout') }}" class="nav-link text-danger" 
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+</nav>

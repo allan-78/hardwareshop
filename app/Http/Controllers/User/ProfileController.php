@@ -23,24 +23,32 @@ class ProfileController extends Controller
     public function update(ProfileRequest $request)
     {
         $user = auth()->user();
-        $data = $request->validated();
+        
+        // Update user information
+        $user->update($request->only([
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'address',
+            'city',
+            'postal_code'
+        ]));
 
-        if ($request->hasFile('photo')) {
-            // Delete old photo
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            // Delete old photo if exists
             if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
+                Storage::delete('public/' . $user->photo);
             }
-            $data['photo'] = $request->file('photo')->store('users', 'public');
+
+            $avatar = $request->file('avatar');
+            $filename = 'avatars/avatar_' . $user->id . '_' . time() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->storeAs('public', $filename);
+            $user->photo = 'storage/' . $filename;
+            $user->save();
         }
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        } else {
-            unset($data['password']);
-        }
-
-        $user->update($data);
-
-        return back()->with('success', 'Profile updated successfully');
+        return back()->with('status', 'Profile updated successfully!');
     }
 }

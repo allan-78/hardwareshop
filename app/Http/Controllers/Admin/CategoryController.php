@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use App\Http\Requests\CategoryRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str; // Add this import
 use Yajra\DataTables\Facades\DataTables;
 
 class CategoryController extends AdminController
@@ -22,7 +23,12 @@ class CategoryController extends AdminController
                 ->make(true);
         }
 
-        return view('admin.categories.index');
+        // Change from get() to paginate()
+        $categories = Category::withCount('products')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.categories.index', compact('categories'));
     }
 
     public function create()

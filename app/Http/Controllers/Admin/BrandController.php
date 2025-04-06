@@ -25,7 +25,8 @@ class BrandController extends AdminController
                 ->make(true);
         }
 
-        return view('admin.brands.index');
+        $brands = Brand::withCount('products')->paginate(10);
+        return view('admin.brands.index', compact('brands'));
     }
 
     public function create()
