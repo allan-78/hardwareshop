@@ -1,19 +1,22 @@
+// Variables
 @import 'admin/variables';
 @import 'admin/layout';
 @import 'admin/sidebar';
+@import 'admin/dashboard';
 @import 'admin/components';
 
 // Global Styles
 body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: $gray-800;
+    color: #5a5c69;
     line-height: 1.5;
+    background-color: #f8f9fc;
 }
 
 // Utilities
-.shadow-sm { box-shadow: $shadow-sm !important; }
-.shadow-md { box-shadow: $shadow-md !important; }
-.shadow-lg { box-shadow: $shadow-lg !important; }
+.shadow-sm { box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important; }
+.shadow { box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; }
+.shadow-lg { box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important; }
 
 // Animations
 @keyframes fadeIn {

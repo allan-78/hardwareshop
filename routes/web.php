@@ -57,8 +57,6 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
-require __DIR__.'/auth.php';
-
 // Email Verification Routes
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [EmailVerificationPromptController::class, '__invoke'])
@@ -68,14 +66,12 @@ Route::middleware('auth')->group(function () {
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
-    Route::post('/email/verification-notification', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        return back()->with('status', 'verification-link-sent');
-    })->middleware(['throttle:6,1'])
+    Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+        ->middleware(['throttle:6,1'])
         ->name('verification.send');
 });
 
-// Protected Routes
+// Protected Routes - require authentication AND email verification
 Route::middleware(['auth', 'verified'])->group(function () {
     // Cart Routes
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -83,7 +79,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cart}', [CartController::class, 'remove'])->name('cart.remove');
-});
 
     // Checkout Routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -103,12 +98,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reviews/create/{product}', [ReviewController::class, 'create'])->name('reviews.create');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
-    ;
+});
 
-// Admin Routes
+// Admin Routes - require authentication, email verification, and admin role
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    // Add other admin routes here
     
     // Admin Profile Routes
     Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile');

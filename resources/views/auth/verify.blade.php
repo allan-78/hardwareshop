@@ -23,43 +23,38 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('verification.resend') }}">
+        @if (session('warning'))
+            <div class="mb-4 font-medium text-sm text-yellow-600 bg-yellow-50 rounded-md p-4">
+                {{ session('warning') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('verification.send') }}">
             @csrf
             <div class="flex items-center justify-between">
                 <button type="submit" 
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 active:bg-blue-600 transition">
                     Resend Verification Email
                 </button>
                 
-                <form method="POST" action="{{ route('logout') }}" class="inline">
+                <form method="POST" action="{{ route('logout') }}" id="logout-form">
                     @csrf
-                    <button type="submit" 
-                            class="text-sm text-gray-600 hover:text-gray-900">
-                        Log Out
-                    </button>
                 </form>
+                
+                <a href="#" 
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    class="text-sm text-gray-600 hover:text-gray-900">
+                    Log Out
+                </a>
             </div>
         </form>
-
-        <div class="mt-6 border-t border-gray-200 pt-4">
-            <h3 class="text-lg font-medium text-gray-700 mb-2">Having trouble?</h3>
-            <p class="text-sm text-gray-600">
-                If you're having trouble receiving the verification email:
-            </p>
-            <ul class="list-disc list-inside text-sm text-gray-600 mt-2 space-y-1">
-                <li>Check your spam/junk folder</li>
-                <li>Make sure you entered the correct email address</li>
-                <li>Try adding noreply@hardwareshop.com to your contacts</li>
-                <li>Contact support if the problem persists</li>
-            </ul>
-        </div>
     </div>
 </div>
 
-@if(config('app.env') === 'local')
-    <div class="mt-4 text-center">
-        <p class="text-sm text-gray-500">
-            Development Notice: Email verification link will be displayed in Laravel log file.
+@if (app()->environment('local'))
+    <div class="mt-6 w-full sm:max-w-md px-6 py-4 bg-yellow-50 text-yellow-800 shadow-md overflow-hidden sm:rounded-lg">
+        <p class="text-sm">
+            <strong>Development Notice:</strong> Email verification is configured to use Mailtrap. Check your Mailtrap inbox for verification emails.
         </p>
     </div>
 @endif

@@ -12,42 +12,65 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Sidebar Toggle
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.getElementById('mainContent');
+    // Sidebar Toggle - moved outside the nested event listener
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.querySelector('.sidebar');
+    const mainContent = document.getElementById('mainContent');
 
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-            });
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
+    }
+
+    // Check window size on load and resize
+    function checkWindowSize() {
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('expanded');
         }
+    }
 
-        // Check window size on load and resize
-        function checkWindowSize() {
-            if (window.innerWidth < 768) {
-                sidebar.classList.add('collapsed');
-                mainContent.classList.add('expanded');
+    window.addEventListener('resize', checkWindowSize);
+    checkWindowSize();
+
+    // Initialize dropdowns
+    const dropdowns = document.querySelectorAll('.dropdown-toggle');
+    dropdowns.forEach(dropdown => {
+        if (bootstrap && bootstrap.Dropdown) {
+            new bootstrap.Dropdown(dropdown);
+        }
+    });
+
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(tooltip => {
+        if (bootstrap && bootstrap.Tooltip) {
+            new bootstrap.Tooltip(tooltip);
+        }
+    });
+
+    // Chart Initialization - Fixed to properly check for Chart.js
+    if (typeof Chart !== 'undefined') {
+        // Initialize sales chart if element exists
+        const salesChartEl = document.getElementById('salesChart');
+        if (salesChartEl) {
+            const salesCtx = salesChartEl.getContext('2d');
+            if (window.salesChartData) {
+                initializeSalesChart(salesCtx, window.salesChartData);
             }
         }
-
-        window.addEventListener('resize', checkWindowSize);
-        checkWindowSize();
-
-        // Initialize dropdowns
-        const dropdowns = document.querySelectorAll('.dropdown-toggle');
-        dropdowns.forEach(dropdown => {
-            new bootstrap.Dropdown(dropdown);
-        });
-
-        // Initialize tooltips
-        const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        tooltips.forEach(tooltip => {
-            new bootstrap.Tooltip(tooltip);
-        });
-    });
+        
+        // Initialize product sales chart if element exists
+        const productChartEl = document.getElementById('productSalesChart');
+        if (productChartEl) {
+            const productCtx = productChartEl.getContext('2d');
+            if (window.productChartData) {
+                initializeProductChart(productCtx, window.productChartData);
+            }
+        }
+    }
 
     // Alert Auto-dismiss
     const alerts = document.querySelectorAll('.alert');
@@ -158,27 +181,60 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Sales Chart Initialization
-function initializeSalesChart() {
-    const ctx = document.getElementById('salesChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
+function initializeSalesChart(ctx, data) {
+    return new Chart(ctx, {
+        type: 'line',
         data: {
-            labels: chartData.labels,
+            labels: data.labels,
             datasets: [{
-                label: 'Sales',
-                data: chartData.values,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                label: 'Monthly Sales',
+                data: data.values,
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                tension: 0.3,
+                fill: true
             }]
         },
         options: {
-            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
             scales: {
                 y: {
-                    beginAtZero: true
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value.toLocaleString();
+                        }
+                    }
                 }
             }
+        }
+    });
+}
+
+// Product Sales Chart Initialization
+function initializeProductChart(ctx, data) {
+    return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                data: data.values,
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#f4b619', '#e02d1b']
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            cutout: '80%'
         }
     });
 }

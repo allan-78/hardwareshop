@@ -47,4 +47,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Reports
     Route::get('/reports/sales', [DashboardController::class, 'salesReport'])->name('reports.sales');
     Route::get('/reports/products', [DashboardController::class, 'productsReport'])->name('reports.products');
+    // Add this route to your admin routes
+    Route::get('/dashboard/sales-data', [DashboardController::class, 'salesData'])->name('dashboard.sales-data');
 });

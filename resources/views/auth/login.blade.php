@@ -9,6 +9,18 @@
                     <h4 class="mb-0">Login to Dashboard</h4>
                 </div>
                 <div class="card-body p-4">
+                    @if (session('success'))
+                        <div class="alert alert-success mb-4">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger mb-4">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">

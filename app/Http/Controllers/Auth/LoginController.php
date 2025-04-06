@@ -12,34 +12,43 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    protected function authenticated(Request $request, $user)
-    {
-        // Check if user is verified
-        if (!$user->email_verified_at) {
-            auth()->logout();
-            throw ValidationException::withMessages([
-                'email' => ['Please verify your email address before logging in.'],
-            ]);
-        }
-
-        // Check if user is active
-        if ($user->status !== 'active') {
-            auth()->logout();
-            throw ValidationException::withMessages([
-                'email' => ['Your account has been deactivated. Please contact administrator.'],
-            ]);
-        }
-
-        // Redirect based on role
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-        
-        return redirect()->route('user.dashboard');
-    }
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        // Check if user is verified
+        if (!$user->hasVerifiedEmail()) {
+            auth()->logout();
+            
+            return redirect()->route('verification.notice')->with('warning', 'You need to verify your email address before logging in.');
+        }
+
+        // Check if user is active
+        if (!$user->isActive()) {
+            auth()->logout();
+            
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been deactivated. Please contact the administrator.'],
+            ]);
+        }
+
+        // Redirect based on role
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->intended($this->redirectPath());
     }
 }
