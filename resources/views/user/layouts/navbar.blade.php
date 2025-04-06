@@ -48,12 +48,10 @@
                                 type="button"
                                 data-bs-toggle="dropdown" 
                                 aria-expanded="false">
-                            <img src="{{ auth()->user()->avatar_url ?? asset('images/default-avatar.png') }}" 
+                            <img src="{{ auth()->user()->photo ? asset(auth()->user()->photo) : asset('images/default-avatar.png') }}" 
                                  alt="{{ auth()->user()->name }}" 
-                                 class="rounded-circle me-2 object-cover"
-                                 width="32" 
-                                 height="32"
-                                 style="object-fit: cover;">
+                                 class="rounded-circle me-2 profile-photo"
+                                 style="width: 32px; height: 32px; object-fit: cover;">
                             <span>{{ auth()->user()->name }}</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm">

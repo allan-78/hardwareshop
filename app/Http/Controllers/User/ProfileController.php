@@ -20,35 +20,69 @@ class ProfileController extends Controller
         return view('user.profile.edit', ['user' => auth()->user()]);
     }
 
-    public function update(ProfileRequest $request)
+    public function update(Request $request)
     {
         $user = auth()->user();
         
-        // Update user information
-        $user->update($request->only([
-            'first_name',
-            'last_name',
-            'email',
-            'phone',
-            'address',
-            'city',
-            'postal_code'
-        ]));
-
-        // Handle avatar upload
-        if ($request->hasFile('avatar')) {
-            // Delete old photo if exists
-            if ($user->photo) {
-                Storage::delete('public/' . $user->photo);
-            }
-
-            $avatar = $request->file('avatar');
-            $filename = 'avatars/avatar_' . $user->id . '_' . time() . '.' . $avatar->getClientOriginalExtension();
-            $avatar->storeAs('public', $filename);
-            $user->photo = 'storage/' . $filename;
-            $user->save();
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+        ]);
+        
+        $user->update($validated);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile updated successfully!'
+        ]);
+    }
+    
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|max:2048',
+        ]);
+        
+        $user = auth()->user();
+        
+        // Delete old photo if exists (but don't delete the default avatar)
+        if ($user->photo && !str_contains($user->photo, 'default-avatar')) {
+            $oldPath = str_replace('storage/', 'public/', $user->photo);
+            Storage::delete($oldPath);
         }
-
-        return back()->with('status', 'Profile updated successfully!');
+        
+        // Store new photo with unique filename
+        $filename = $user->id.'_'.time().'.'.$request->file('photo')->extension();
+        $path = $request->file('photo')->storeAs('public/users', $filename);
+        
+        $user->photo = str_replace('public/', 'storage/', $path);
+        $user->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile photo updated successfully!',
+            'photo' => $user->photo . '?t=' . time()  // Cache busting
+        ]);
+    }
+    
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => 'required|min:8|confirmed',
+        ]);
+        
+        $user = auth()->user();
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Password updated successfully!'
+        ]);
     }
 }

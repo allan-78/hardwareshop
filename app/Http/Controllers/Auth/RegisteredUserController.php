@@ -44,8 +44,8 @@ class RegisteredUserController extends Controller
         // Handle photo upload
         $photoPath = null;
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            $photoPath = $request->file('photo')->store('users', 'public');
-            $photoPath = 'storage/' . $photoPath;
+            $path = $request->file('photo')->store('public/users');
+            $photoPath = str_replace('public/', 'storage/', $path);
         }
 
         $user = User::create([

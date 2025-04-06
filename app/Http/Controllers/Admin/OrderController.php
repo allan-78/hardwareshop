@@ -17,8 +17,15 @@ class OrderController extends AdminController
             $orders = Order::with('user');
             
             return DataTables::of($orders)
-                ->addColumn('action', function ($order) {
-                    return view('admin.orders.actions', compact('order'));
+
+            ->addColumn('action', function ($order) {
+                    $buttons = '<a href="'.route('admin.orders.show', $order->id).'" class="btn btn-sm btn-primary">View</a>';
+                    
+                    if ($order->status === 'pending') {
+                        $buttons .= ' <button class="btn btn-sm btn-success mark-completed" data-id="'.$order->id.'">Mark Completed</button>';
+                    }
+                    
+                    return $buttons;
                 })
                 ->editColumn('status', function ($order) {
                     return ucfirst($order->status);
@@ -39,5 +46,15 @@ class OrderController extends AdminController
             ->paginate(10);
 
         return view('admin.orders.index', compact('orders'));
+    }
+    
+    public function markAsCompleted(Order $order)
+    {
+        $order->update(['status' => 'completed']);
+        
+        // Send email notification
+        Mail::to($order->user->email)->send(new OrderStatusUpdated($order));
+        
+        return response()->json(['success' => true]);
     }
 }

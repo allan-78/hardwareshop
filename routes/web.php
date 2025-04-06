@@ -91,8 +91,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
 
     // Profile Routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.update.photo');
+        Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
+    });
 
     // Review Routes
     Route::get('/reviews/create/{product}', [ReviewController::class, 'create'])->name('reviews.create');
@@ -111,4 +115,24 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
     // Admin Settings Routes
     Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'edit'])->name('settings');
     Route::put('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+    
+    // Add these routes to your web.php file
+    
+    // Admin routes
+    Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        // ... existing admin routes
+        
+        // Order status update
+        Route::patch('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::patch('/orders/{order}/mark-completed', [OrderController::class, 'markAsCompleted'])->name('orders.mark-completed');
+    });
+    
+    // User routes
+    Route::middleware(['auth'])->group(function () {
+        // ... existing user routes
+        
+        // Order receipt
+        Route::get('/orders/{order}/receipt', [OrderController::class, 'downloadReceipt'])->name('orders.receipt');
+    });
+
 });

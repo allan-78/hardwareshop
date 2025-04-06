@@ -17,12 +17,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <p class="text-sm text-gray-600">Status</p>
-                        <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="mt-1 flex">
+                        <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="flex">
                             @csrf
                             @method('PATCH')
-                            <select name="status" class="form-select rounded-l-md w-full">
+                            <select name="status" class="form-select rounded-l-md">
                                 <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
+                                <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Shipped</option>
                                 <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Completed</option>
                                 <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>

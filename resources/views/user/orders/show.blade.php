@@ -45,7 +45,7 @@
                                 <p class="mt-1 text-sm text-gray-500">
                                     Quantity: {{ $item->quantity }} × ₱{{ number_format($item->price, 2) }}
                                 </p>
-                                @if(!$order->reviewed && $order->status === 'completed')
+                                @if($order->status === 'completed')
                                     <div class="mt-2">
                                         <a href="{{ route('reviews.create', ['product' => $item->product_id]) }}" 
                                            class="text-sm text-blue-600 hover:text-blue-500">

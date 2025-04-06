@@ -2,61 +2,74 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Order Receipt #{{ $order->order_number }}</title>
+    <title>Order Receipt</title>
     <style>
         body {
-            font-family: 'DejaVu Sans', sans-serif;
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             color: #333;
         }
         .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
         }
         .header {
             text-align: center;
             margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
         }
         .logo {
-            max-width: 200px;
+            max-width: 150px;
             margin-bottom: 10px;
         }
         .receipt-title {
             font-size: 24px;
-            color: #2d3748;
-            margin-bottom: 5px;
+            color: #333;
+            margin: 0;
         }
         .order-info {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .customer-info {
+            margin-bottom: 30px;
+        }
+        h3 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 20px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         th, td {
             padding: 10px;
-            border-bottom: 1px solid #ddd;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f8fafc;
-            font-weight: bold;
+            background-color: #f8f9fa;
         }
         .totals {
-            text-align: right;
             margin-top: 20px;
+            text-align: right;
         }
         .total-row {
-            margin: 5px 0;
+            margin-bottom: 5px;
         }
         .grand-total {
             font-size: 18px;
-            font-weight: bold;
-            color: #2d3748;
             margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #ddd;
         }
         .footer {
-            margin-top: 40px;
+            margin-top: 50px;
             text-align: center;
             font-size: 12px;
             color: #666;

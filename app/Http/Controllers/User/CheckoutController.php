@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Mail\OrderConfirmation;
+use App\Mail\OrderPlaced; // Ensure this line is present
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use PDF;
@@ -19,53 +17,48 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        $cart = session()->get('cart', []);
-        if (empty($cart)) {
-            return redirect()->route('cart.index');
-        }
+        $cartItems = auth()->user()->cartItems()->with('product')->get();
+        $subtotal = $cartItems->sum(function($item) {
+            return $item->price * $item->quantity;
+        });
+        $shipping = 50; // Default shipping fee
+        $total = $subtotal + $shipping;
 
-        return view('user.checkout.index', compact('cart'));
+        return view('user.checkout.index', compact('cartItems', 'subtotal', 'shipping', 'total'));
     }
 
-    public function store(Request $request)
+    public function process(Request $request)
     {
-        $request->validate([
-            'shipping_address' => 'required|string',
-            'contact_number' => 'required|string'
+        $user = auth()->user();
+        $cartItems = $user->cartItems()->with('product')->get();
+        
+        // Create order
+        $order = $user->orders()->create([
+            'order_number' => 'ORD-' . strtoupper(uniqid()),
+            'subtotal' => $cartItems->sum(fn($item) => $item->price * $item->quantity),
+            'shipping_fee' => 50, // Fixed shipping
+            'total_amount' => $cartItems->sum(fn($item) => $item->price * $item->quantity) + 50,
+            'status' => 'pending',
+            'shipping_address' => $user->address,
+            'shipping_city' => $user->city,
+            'shipping_postal_code' => $user->postal_code,
+            'shipping_phone' => $user->phone
         ]);
-
-        $cart = session()->get('cart', []);
-        $total = 0;
-
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'total_amount' => $total,
-            'shipping_address' => $request->shipping_address,
-            'contact_number' => $request->contact_number,
-            'status' => 'pending'
-        ]);
-
-        foreach ($cart as $productId => $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $productId,
-                'quantity' => $item['quantity'],
-                'price' => $item['price']
+    
+        // Add order items
+        foreach ($cartItems as $item) {
+            $order->items()->create([
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $item->price
             ]);
         }
-
-        // Generate PDF receipt
-        $pdf = PDF::loadView('pdf.receipt', compact('order'));
-
-        // Send confirmation email with PDF attachment
-        Mail::to(auth()->user()->email)
-            ->send(new OrderConfirmation($order, $pdf));
-
-        session()->forget('cart');
+    
+        // Clear cart
+        $user->cartItems()->delete();
+    
+        // Send email notification
+        Mail::to($user->email)->send(new OrderPlaced($order));
 
         return redirect()->route('checkout.success', $order);
     }
